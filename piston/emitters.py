@@ -202,8 +202,9 @@ class Emitter(object):
                     get_fields = set(fields)
 
                 met_fields = self.method_fields(handler, get_fields)
-
-                for f in data._meta.local_fields + data._meta.virtual_fields:
+                
+                concrete_class = data._meta.proxy_for_model or data.__class__
+                for f in concrete_class._meta.local_fields + concrete_class._meta.virtual_fields:
                     if f.serialize and not any([ p in met_fields for p in [ f.attname, f.name ]]):
                         if not f.rel:
                             if f.attname in get_fields:
